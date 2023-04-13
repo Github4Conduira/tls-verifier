@@ -1,0 +1,14 @@
+{
+   "compilerOptions": {
+      "lib": ["ESNext"],
+      "target": "ES2022",
+      "module": "commonjs",
+      "outDir": "./build",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "skipLibCheck": true,
+      "sourceMap": true,
+     "allowSyntheticDefaultImports": true,
+     "resolveJsonModule": true
+   }
+}

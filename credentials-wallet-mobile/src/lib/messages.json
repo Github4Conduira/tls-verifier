@@ -1,0 +1,38 @@
+{
+  "common": {
+    "create": "Create",
+    "cancel": "Cancel",
+    "and": "and",
+    "more": "other claims",
+    "google": "Google",
+    "github": "Github",
+    "edit": "Edit",
+    "settings": "Settings",
+    "share": "Share",
+    "approve": "Approve",
+    "decline": "Decline"
+  },
+  "yourLinks": {
+    "title": "Your Links",
+    "noLinks": "Feels pretty empty here, click the button above to create your first link."
+  },
+  "editLink": {
+    "copyUrl": "Copy URL",
+    "moreOptions": "More options"
+  },
+  "createLink": {
+    "title": "New Link",
+    "card": {
+      "title": "Add new claim",
+      "description": "Owning a gmail, worked on a Github repo, having number of Instagram  followers..."
+    }
+  },
+  "createClaim": {
+    "title": "Create Claim",
+    "description": "Select an app that has a claim that you want to share with others."
+  },
+  "possibleClaims": {
+    "signedInAs": "Signed in as",
+    "signedInToGithub": "Signed in to Github"
+  }
+}

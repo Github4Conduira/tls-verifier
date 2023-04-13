@@ -1,0 +1,11 @@
+{
+	"name": "github-contributor",
+	"params": {
+		"repo": "questbook/tls-receipt-verifier"
+	},
+	"secretParams": {
+		"token": "{{GH_TOKEN}}",
+		"username": "{{GH_USERNAME}}",
+		"repo": "questbook/tls-receipt-verifier"
+	}
+}

@@ -1,0 +1,2 @@
+mkdir -p src/proto/generated/types
+protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=src/proto/generated/types --ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=false,esModuleInterop=true --proto_path=./src/proto ./src/proto/*.proto

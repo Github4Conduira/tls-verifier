@@ -1,0 +1,6 @@
+import './deploy'
+import './add-witness'
+import './whitelist-oracle'
+import './view-witnesses'
+import './remove-witness'
+import './upgrade'

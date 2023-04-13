@@ -1,0 +1,4 @@
+src/contracts
+src/types/contracts
+src/proto
+extra-contracts-config.json

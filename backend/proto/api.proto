@@ -1,0 +1,294 @@
+syntax = "proto3";
+package reclaim_backend;
+
+enum VerificationRequestStatus {
+  /** when then requestor initially asks for verification */
+  VERIFICATION_REQUEST_STATUS_PENDING = 0;
+  /**
+   * when the claimer has responded,
+   * waiting for the requestor to accept/reject the proof
+   */
+  VERIFICATION_REQUEST_STATUS_PENDING_APPROVAL = 1;
+  /** successfully verified the request */
+  VERIFICATION_REQUEST_STATUS_DONE = 2;
+  /** the request expired, either party failed to respond in time */
+  VERIFICATION_REQUEST_STATUS_EXPIRED = 4;
+  /** the requestor failed to provide a valid proof */
+  VERIFICATION_REQUEST_STATUS_FAILED = 5;
+  /** claimer rejected the request */
+  VERIFICATION_REQUEST_STATUS_REJECTED = 6;
+}
+
+message LinkClaim {
+  // ID of the claim from the smart contract creation
+  uint32 id = 1;
+  // the chain on which the claim lies
+  uint32 chainId = 2;
+  // eg. google-login
+  string provider = 3;
+  // Eg. if parameters = alice@creatoros.co,
+  // redactedParameters = *****@creatoros.co
+  string redactedParameters = 4;
+  // public key of the owner address,
+  // that generated the claim
+  bytes ownerPublicKey = 5;
+  // when the claim was created
+  uint32 timestampS = 6;
+  // list of addresses that attested to the claim's validity
+  // note: this is the wallet address of the witness & not the host
+  // eg. "0x123456789"
+  // not required to be submitted in the request. Backend will
+  // fetch the witness addresses from the smart contract
+  repeated string witnessAddresses = 7;
+}
+
+message Link {
+  // ID of the link; would be unique & pseudo-random
+  string id = 1;
+  // the user that created the link
+  // is blank when requested by anybody other than the creator
+  string userId = 2;
+  // name of the link
+  string name = 3;
+  // list of claims belonging to the link
+  repeated LinkClaim claims = 4;
+  // when the link was created
+  // unix timestamp in seconds
+  uint32 createdAtS = 5;
+  // number of views the link has
+  uint32 views = 6;
+}
+
+message ClaimProof {
+  /** the full parameters of the claim */
+  string parameters = 2;
+  /**
+   * signatures of the claim done by the witnesses
+   * that attested to the claim's validity
+   */
+  repeated bytes signatures = 3;
+}
+
+message EncryptedClaimProof {
+  /** ID of the encrypted claim */
+  uint32 id = 1;
+  /** encrypted claim proof */
+  bytes enc = 2;
+}
+
+message VerificationRequest {
+  /** unique ID of this verification request */
+  string id = 1;
+  /** the link being verified */
+  Link link = 2;
+  /** reason for request; eg.: "we'd like to hire you" */
+  string context = 3;
+  /** status of the request */
+  VerificationRequestStatus status = 4;
+  /** Ephemeral public key for encrypted communication */
+  bytes communicationPublicKey = 5;
+  /**
+   * Signature of the ephemeral public key,
+   * with the master key of the requestor
+   */
+  bytes communicationSignature = 6;
+  /** ID of the requestor; their wallet address */
+  string requestorId = 7;
+  /** when the request was created */
+  uint32 createdAtS = 8;
+  /** when the request was updated */
+  uint32 updatedAtS = 9;
+  /** request expiration date; unix timestamp in seconds */
+  uint32 expiresAtS = 10;
+  /**
+   * proofs sent in by the claimer;
+   * should be encrypted "ClaimProof" structure
+   */
+  repeated EncryptedClaimProof encryptedClaimProofs = 11;
+}
+
+message Pagination {
+  uint32 page = 1;
+  uint32 pageSize = 2;
+}
+
+message GetServiceMetadataRequest {
+  // empty
+}
+
+message GetServiceMetadataResponse {
+  string walletAddress = 1;
+}
+
+message GetLinksRequest {
+  /** fetch a link with a specific ID */
+  string id = 1;
+  /**
+   * if true, increments the view count of the links returned
+   * will only increment if ID is set
+   */
+  bool view = 2;
+}
+
+message GetLinksResponse {
+  repeated Link links = 1;
+}
+
+message CreateLinkRequest {
+  string name = 1;
+  repeated LinkClaim claims = 2;
+}
+
+message CreateLinkResponse {
+  /** ID of the link */
+  string id = 1;
+}
+
+message UpdateUserRequest {
+  // Token for notifications
+  // Pass empty string to remove
+  string firebaseToken = 2;
+}
+
+message UpdateUserResponse {
+
+}
+
+message CreateVerificationRequestRequest {
+  /** ID of the link to request verification from */
+  string linkId = 1;
+  /** Ephemeral public key for encrypted communication */
+  bytes communicationPublicKey = 2;
+  /**
+   * Signature of the ephemeral public key,
+   * with the master key of the requestor
+   */
+  bytes communicationSignature = 3;
+  /** reason for the request */
+  string context = 4;
+}
+
+message CreateVerificationRequestResponse {
+  /** id of verification request */
+  string id = 1;
+}
+
+message AcceptVerificationRequestRequest {
+  /** ID of the verification request */
+  string id = 1;
+  /**
+   * proofs of the claims;
+   * for every claim => 
+   *  K = DHKE(Pri(claim),communicationPublicKey)
+   *  Encrypt(proto(ClaimProof), K)
+   */
+  repeated EncryptedClaimProof encryptedClaimProofs = 2;
+}
+
+message AcceptVerificationRequestResponse {
+  // empty
+}
+
+message RejectVerificationRequestRequest {
+  /** ID of the verification request */
+  string id = 1;
+}
+
+message RejectVerificationRequestResponse {
+  // empty
+}
+
+message SucceedVerificationRequestRequest {
+  /** ID of the verification request */
+  string id = 1;
+}
+
+message SucceedVerificationRequestResponse {
+  // empty
+}
+
+message FailVerificationRequestRequest {
+  /** ID of the verification request */
+  string id = 1;
+  /**
+   * the private key of the public key earlier
+   * submitted in CreateVerificationRequest
+   */
+  bytes communicationPrivateKey = 2;
+}
+
+message FailVerificationRequestResponse {
+  // empty
+}
+
+message GetVerificationRequestsRequest {
+  string id = 1; //optional ID of the verification request
+  Pagination pagination = 2;
+}
+
+message GetVerificationRequestsResponse {
+  repeated VerificationRequest requests = 1;
+  /** next page of requests; 0 if no more data */
+  uint32 nextPage = 2;
+}
+
+message StartClaimCreationRequest {
+  /**
+   * hash of the information in the claim
+   * infoHash = Hash(provider,providerParams)
+   */
+  bytes infoHash = 1;
+  /** signature done by the owner to authorise the claim by QB */
+  bytes authorisationSignature = 2;
+  /**
+   * unix timestamp (in ms) after which
+   * the signature cannot be used anymore
+   */
+  uint64 expiryTimestampMs = 3;
+  /** token from the captcha check */
+  string captchaToken = 4;
+}
+
+message StartClaimCreationResponse {
+  /** ID of the claim on the smart contract */
+  uint32 claimId = 1;
+  /** the chain ID on which the creation was done */
+  uint32 chainId = 2;
+  /** 
+   * the hosts of the witnesses
+   * where the user needs to make the request
+   */
+  repeated string witnessHosts = 3;
+}
+
+service ReclaimBackend {
+  /** Get metadata (including wallet address) about the service */
+  rpc GetServiceMetadata(GetServiceMetadataRequest) returns (GetServiceMetadataResponse);
+  /** get links created by the user */
+  rpc GetLinks(GetLinksRequest) returns (GetLinksResponse);
+  /** create a new link */
+  rpc CreateLink(CreateLinkRequest) returns (CreateLinkResponse);
+  /** request verification for a link */
+  rpc CreateVerificationRequest(CreateVerificationRequestRequest) returns (CreateVerificationRequestResponse);
+  /** as a claimer, accept a verification request */
+  rpc AcceptVerificationRequest(AcceptVerificationRequestRequest) returns (AcceptVerificationRequestResponse);
+  /** as a claimer, reject a verification request */
+  rpc RejectVerificationRequest(RejectVerificationRequestRequest) returns (RejectVerificationRequestResponse);
+  /** as a requestor, mark the verification request as complete */
+  rpc SucceedVerificationRequest(SucceedVerificationRequestRequest) returns (SucceedVerificationRequestResponse);
+  /**
+   * as a requestor, mark the verification request as failed;
+   * invalid proof submitted by the claimer
+   */
+  rpc FailVerificationRequest(FailVerificationRequestRequest) returns (FailVerificationRequestResponse);
+  /** get verification requests */
+  rpc GetVerificationRequests(GetVerificationRequestsRequest) returns (GetVerificationRequestsResponse);
+  /** update your own user */
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  /**
+   * start claim creation, sponsored by QB
+   * Note: this RPC must be authorised by the wallet
+   * that is going to create the claim
+   */
+  rpc StartClaimCreation(StartClaimCreationRequest) returns (StartClaimCreationResponse);
+}

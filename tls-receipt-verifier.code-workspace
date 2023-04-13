@@ -1,0 +1,45 @@
+{
+	"folders": [
+		{
+			"name": "✨ root",
+			"path": "."
+		},
+		{
+			"name": "🚀 @questbook/reclaim-backend",
+			"path": "backend"
+		},
+		{
+			"name": "@questbook/reclaim-browser-example",
+			"path": "browser-example"
+		},
+		{
+			"name": "@questbook/credentials-wallet",
+			"path": "credentials-wallet"
+		},
+		{
+			"name": "CredentialsWalletApp",
+			"path": "credentials-wallet-mobile"
+		},
+		{
+			"name": "@questbook/reclaim-crypto-sdk",
+			"path": "crypto-sdk"
+		},
+		{
+			"name": "@questbook/reclaim-node",
+			"path": "node"
+		},
+		{
+			"name": "@questbook/reclaim-client-sdk",
+			"path": "reclaim-client-sdk"
+		},
+		{
+			"name": "@questbook/reclaim-contracts",
+			"path": "smart-contract"
+		},
+		{
+			"name": "@questbook/reclaim-zk",
+			"path": "zk"
+		}
+	],
+	"settings": {}
+}
