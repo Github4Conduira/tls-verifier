@@ -1,4 +1,4 @@
-import { createSignDataForCommunicationKey, signatures } from '@reclaimprotocol/crypto-sdk'
+import { createSignDataForCommunicationKey, signatures } from '@questbookapp/reclaim-crypto-sdk'
 import { ServerError, Status } from 'nice-grpc'
 import { VerificationRequest, VerificationRequestStatus } from '../api'
 import { DEFAULT_VERIFICATION_REQUEST_LIFETIME_H } from '../config'

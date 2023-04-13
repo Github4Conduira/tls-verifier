@@ -17,8 +17,8 @@
    "author": "Alex E",
    "license": "ISC",
    "dependencies": {
+      "@questbookapp/reclaim-crypto-sdk": "file:../crypto-sdk",
       "@questbook/reclaim-node": "file:../node",
-      "@reclaimprotocol/crypto-sdk": "file:../crypto-sdk",
       "base64url": "^3.0.1",
       "dotenv": "^16.0.3",
       "ethers": "^5.7.2",

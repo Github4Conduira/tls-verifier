@@ -1,7 +1,7 @@
 {
-  "name": "@reclaimprotocol/crypto-sdk",
-  "version": "0.0.2",
-  "description": "Crypto SDK to handle all crypto related operations for reclaim protocol",
+  "name": "@questbookapp/reclaim-crypto-sdk",
+  "version": "0.0.1",
+  "description": "questbook crypto SDK",
   "main": "build/index.js",
   "scripts": {
     "test": "jest",

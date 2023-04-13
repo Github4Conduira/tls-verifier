@@ -1,4 +1,4 @@
-import { authenticate, AuthToken } from '@reclaimprotocol/crypto-sdk'
+import { authenticate, AuthToken } from '@questbookapp/reclaim-crypto-sdk'
 import { randomBytes } from 'crypto'
 import type { CallContext, ServerMiddlewareCall } from 'nice-grpc'
 import { ServerError, Status } from 'nice-grpc'

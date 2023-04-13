@@ -1,5 +1,6 @@
-import { isRedactionCongruent, REDACTION_CHAR_CODE } from '@reclaimprotocol/crypto-sdk'
-import { PrivateInput, Proof, PublicInput, UintArray, ZKOperator } from "./types"
+import * as snarkjs from "snarkjs"
+import { isRedactionCongruent, REDACTION_CHAR_CODE } from '@questbookapp/reclaim-crypto-sdk'
+import { PrivateInput, Proof, PublicInput, VerificationKey, UintArray, ZKParams } from "./types"
 import { makeUintArray } from "./utils"
 
 // chunk size in 32-bit words
@@ -26,7 +27,7 @@ export async function generateProof(
 		startCounter,
 	}: PrivateInput,
 	pub: PublicInput,
-	operator: ZKOperator
+	{ zkey, circuitWasm }: ZKParams,
 ): Promise<Proof[]> {
 	const keyU32 = toUintArray(Buffer.from(key))
 	const nonce = toUintArray(Buffer.from(iv))
@@ -34,13 +35,15 @@ export async function generateProof(
 	const proofs = await chunkingPublicInputs(
 		pub,
 		async(ciphertext, _, i) => {
-			const { proof, publicSignals } = await operator.groth16FullProve(
+			const { proof, publicSignals } = await snarkjs.groth16.fullProve(
 				{
 					key: Array.from(keyU32),
 					nonce: Array.from(nonce),
 					counter: startCounter + i * (CHUNK_SIZE/BLOCK_SIZE),
 					in: Array.from(ciphertext),
 				},
+				circuitWasm,
+				zkey.data,
 			)
 
 			return {
@@ -65,8 +68,13 @@ export async function generateProof(
 export async function verifyProof(
 	proofs: Proof[],
 	publicInput: PublicInput,
-	operator: ZKOperator
+	zkey: VerificationKey
 ): Promise<void> {
+	if(!zkey.json) {
+		const zkeyJson = await snarkjs.zKey.exportVerificationKey(zkey.data)
+		zkey.json = zkeyJson
+	}
+
 	await chunkingPublicInputs(
 		publicInput,
 		async(redactedCiphertext, redactedPlaintext, i) => {
@@ -87,9 +95,10 @@ export async function verifyProof(
 					decryptedRedactedCiphertext: proofs[i].decryptedRedactedCiphertext
 				},
 			)
-			const chunkVerfied = await operator.groth16Verify(
+			const chunkVerfied = await snarkjs.groth16.verify(
+				zkey.json,
 				pubInputs,
-				JSON.parse(proofs[i].proofJson),
+				JSON.parse(proofs[i].proofJson)
 			)
 
 			if(!chunkVerfied) {

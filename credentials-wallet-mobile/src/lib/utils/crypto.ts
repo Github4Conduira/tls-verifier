@@ -1,6 +1,6 @@
 import { NODEJS_TLS_CRYPTO, TLSCrypto } from '@questbook/reclaim-node'
 import { AUTH_TAG_BYTE_LENGTH } from '@questbook/reclaim-node/lib/tls/constants'
-import { signatures } from '@reclaimprotocol/crypto-sdk'
+import { signatures } from '@questbookapp/reclaim-crypto-sdk'
 import { ChaCha20Poly1305 } from '@stablelib/chacha20poly1305'
 import { ethers, Wallet } from 'ethers'
 import 'react-native-get-random-values'
@@ -30,8 +30,12 @@ export const REACT_NATIVE_TLS_CRYPTO: TLSCrypto = {
 			const cipher = new ChaCha20Poly1305(opts.key)
 			const total = cipher.seal(opts.iv, opts.data, opts.aead)
 			return {
-				ciphertext: Buffer.from(total.slice(0, total.length - AUTH_TAG_BYTE_LENGTH)),
-				authTag: Buffer.from(total.slice(total.length - AUTH_TAG_BYTE_LENGTH)),
+				ciphertext: Buffer.from(
+					total.slice(0, total.length - AUTH_TAG_BYTE_LENGTH),
+				),
+				authTag: Buffer.from(
+					total.slice(total.length - AUTH_TAG_BYTE_LENGTH)
+				)
 			}
 		}
 
@@ -50,5 +54,5 @@ export const REACT_NATIVE_TLS_CRYPTO: TLSCrypto = {
 		}
 
 		return NODEJS_TLS_CRYPTO.decrypt(cipherSuite, opts)
-	},
+	}
 }

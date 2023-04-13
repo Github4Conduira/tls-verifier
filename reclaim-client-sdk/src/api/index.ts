@@ -1,4 +1,4 @@
-import { authoriseWalletForClaimCreation, createSignDataForCommunicationKey, encryptClaimProof, signatures } from '@reclaimprotocol/crypto-sdk';
+import { authoriseWalletForClaimCreation, createSignDataForCommunicationKey, encryptClaimProof, signatures } from '@questbookapp/reclaim-crypto-sdk';
 import { ClaimProofInterface } from '../types';
 import { Wallet } from 'ethers';
 import { arrayify } from 'ethers/lib/utils'

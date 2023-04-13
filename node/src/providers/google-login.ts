@@ -4,7 +4,7 @@
  *
  * https://developers.google.com/people/api/rest/v1/people/get
  */
-import { DEFAULT_PORT, Provider } from '../types'
+import { Provider } from '../types'
 import { getCompleteHttpResponseFromTranscript, getHttpRequestHeadersFromTranscript } from '../utils/http-parser'
 
 type GoogleLoginParams = {
@@ -17,14 +17,15 @@ type GoogleLoginSecretParams = {
 
 // where to send the HTTP request
 const HOST = 'www.googleapis.com'
-const HOSTPORT = `${HOST}:${DEFAULT_PORT}`
+const PORT = 443
+const HOSTPORT = `${HOST}:${PORT}`
 
 // what API to call
 const METHOD = 'GET'
 const URL = '/oauth2/v3/userinfo?access_token='
 
 const googleLogin: Provider<GoogleLoginParams, GoogleLoginSecretParams> = {
-	hostPort: HOSTPORT,
+	hostPorts: [HOSTPORT],
 	areValidParams(params): params is GoogleLoginParams {
 		return typeof params.emailAddress === 'string'
 	},

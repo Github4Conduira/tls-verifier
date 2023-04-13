@@ -31,7 +31,6 @@ async function main() {
 	const { receipt } = await generateProviderReceipt({
 		name: paramsJson.name,
 		secretParams: paramsJson.secretParams,
-		params: paramsJson.params,
 		client,
 		logger,
 	})

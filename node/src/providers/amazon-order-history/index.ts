@@ -1,7 +1,7 @@
 import { stringify } from 'querystring'
-import { TranscriptMessageSenderType } from '../../proto/api'
-import { DEFAULT_PORT, Provider } from '../../types'
-import { getHttpRequestHeadersFromTranscript } from '../../utils/http-parser'
+import { gunzipSync } from 'zlib'
+import { Provider } from '../../types'
+import { getCompleteHttpResponseFromTranscript, getHttpRequestHeadersFromTranscript } from '../../utils/http-parser'
 import { parseResponse } from './utils'
 
 // params for the request that will be publicly available
@@ -29,16 +29,13 @@ type AmazonOrderHistorySecretParams = {
 
 // where to send the HTTP request
 const HOST = 'www.amazon.in'
-const HOSTPORT = `${HOST}:${DEFAULT_PORT}`
+const PORT = 443
+const HOSTPORT = `${HOST}:${PORT}`
 
 const PATH = '/gp/your-account/order-history/ref=ppx_yo_dt_b_search'
 
-const PRODUCT_REGEXP = /<a class="a-link-normal"[a-z\s%0-9&(),"\/=\?&;_]+>[a-z\s%0-9&;(),]+<\/a>/gim
-
-const REVEAL_BUFFER = 10
-
 const amazonOrderHistory: Provider<AmazonOrderHistoryParams, AmazonOrderHistorySecretParams> = {
-	hostPort: HOSTPORT,
+	hostPorts: [HOSTPORT],
 	areValidParams(params): params is AmazonOrderHistoryParams {
 		return typeof params.productName === 'string'
 			&& Object.keys(params).length === 1
@@ -61,7 +58,7 @@ const amazonOrderHistory: Provider<AmazonOrderHistoryParams, AmazonOrderHistoryS
 			'Content-Length: 0',
 			'User-Agent: reclaim/1.0.0',
 			`Cookie: ${cookieStr}`,
-			'Accept-Encoding: deflate, br',
+			'Accept-Encoding: gzip, deflate, br',
 			'\r\n'
 		].join('\r\n')
 
@@ -81,42 +78,6 @@ const amazonOrderHistory: Provider<AmazonOrderHistoryParams, AmazonOrderHistoryS
 			]
 		}
 	},
-	getResponseRedactions(response, { productName }) {
-		productName = productName.toLowerCase()
-		const resStr = response.toString()
-		const headerEndIndex = resStr.indexOf('OK') + 2
-		const regexp = new RegExp(PRODUCT_REGEXP, 'gim')
-
-		let match: RegExpExecArray | null
-		let matchIdx = -1
-		let matchLength = -1
-		while(match = regexp.exec(resStr)) {
-			if(match[0].toLowerCase().includes(productName)) {
-				matchIdx = match.index
-				matchLength = match[0].length
-				break
-			}
-		}
-
-		if(matchIdx === -1) {
-			throw new Error('Failed to find product in response')
-		}
-
-		// add some buffer to reveal chars
-		matchIdx -= REVEAL_BUFFER
-		matchLength += REVEAL_BUFFER * 2
-
-		return [
-			{
-				fromIndex: headerEndIndex,
-				toIndex: matchIdx
-			},
-			{
-				fromIndex: matchIdx + matchLength,
-				toIndex: response.length
-			}
-		]
-	},
 	assertValidProviderReceipt(receipt, { productName }) {
 		productName = productName.toLowerCase()
 		// ensure the request was sent to the right place
@@ -135,22 +96,24 @@ const amazonOrderHistory: Provider<AmazonOrderHistoryParams, AmazonOrderHistoryS
 			throw new Error(`Invalid path: ${req.url}`)
 		}
 
-		const res = Buffer.concat(
+		const res = getCompleteHttpResponseFromTranscript(
 			receipt.transcript
-				.filter(r => (
-					r.senderType === TranscriptMessageSenderType.TRANSCRIPT_MESSAGE_SENDER_TYPE_SERVER
-					&& !r.redacted
-				))
-				.map(r => r.message)
-		).toString()
+		)
+		if(!res.headers['content-type']?.startsWith('text/html')) {
+			throw new Error(`Invalid content-type: ${res.headers['content-type']}`)
+		}
 
-		if(!res.includes('HTTP/1.1 200 OK')) {
-			throw new Error('Invalid response')
+		let html: string
+		if(res.headers['content-encoding'] === 'gzip') {
+			const buf = Buffer.from(res.body)
+			html = gunzipSync(buf).toString()
+		} else {
+			html = res.body.toString()
 		}
 
 		// parse the HTML response and check if
 		// the product name is in the list of orders
-		const orders = parseResponse(res)
+		const orders = parseResponse(html)
 		if(!orders.find(order => (
 			// check if the order's name starts with the product name
 			// this seems to be a constraint that cannot be

@@ -1,15 +1,16 @@
-import React from 'react'
-import WebView from 'react-native-webview'
-import { getCookies } from '@app/lib/utils/helpers'
-import { ProvidersStackScreenProps } from '@app/providers/navigation'
-import { setUserInfo } from '@app/providers/yc/redux/userInfo'
-import { useReduxDispatch } from '@app/redux/config'
+import React from 'react';
+import { ProvidersStackScreenProps } from '@app/providers/navigation';
+import { useReduxDispatch } from '@app/redux/config';
+import { fetchGoogleInfo } from '@app/providers/google/redux/userInfo/actions';
+import WebView from 'react-native-webview';
+import CookieManager from '@react-native-cookies/cookies';
+import { setUserInfo } from '@app/providers/yc/redux/userInfo';
 
 type Props = ProvidersStackScreenProps<'yc', 'Authentication'>;
 
-const YC_URL = 'https://bookface.ycombinator.com/'
+const YC_URL = 'https://bookface.ycombinator.com/';
 
-const LOGGED_IN_TXT = 'logged-in'
+const LOGGED_IN_TXT = 'logged-in';
 
 const injection = `
 function getCookie(name) {
@@ -42,43 +43,42 @@ function getCookie(name) {
       }
 		}, 100
 	)
-    true; // note: this is required, or you'll sometimes get silent failures`
+    true; // note: this is required, or you'll sometimes get silent failures`;
 
 const Authentication: React.FC<Props> = ({ navigation, route }) => {
-	const { returnScreen } = route.params
-	const dispatch = useReduxDispatch()
+  const { returnScreen } = route.params;
+  const dispatch = useReduxDispatch();
 
-	const onCookiesExtracted = async(cookieStr: string, userId: string) => {
-		dispatch(setUserInfo({ cookieStr, userId: parseInt(userId) }))
-		navigation.navigate(...returnScreen)
-	}
+  const onCookiesExtracted = async (cookieStr: string, userId: string) => {
+    console.log('cookies extracted: ', cookieStr, userId);
+    dispatch(setUserInfo({ cookieStr, userId: parseInt(userId) }));
+    navigation.navigate(...returnScreen);
+  };
 
-	return (
-		<>
-			<WebView
-				source={{ uri: YC_URL }}
-				injectedJavaScript={injection}
-				thirdPartyCookiesEnabled={true}
-				onMessage={
-					async() => {
-						try {
-							const res = await getCookies(YC_URL)
 
-							const userId = res['ajs_user_id'].value
+  return (
+    <>
+      <WebView
+        source={{ uri: YC_URL }}
+        injectedJavaScript={injection}
+        thirdPartyCookiesEnabled={true}
+        onMessage={async (data) => {          
+          try {
+            const res = await CookieManager.getAll(true);
 
-							const cookieStr = Object.values(res)
-								.map((c) => `${c.name}=${c.value}`)
-								.join('; ')
-							onCookiesExtracted(cookieStr, userId)
-						} catch(error) {
-						/* eslint-disable no-console */
-							console.log('error getting cookies: ', error)
-						}
-					}
-				}
-			/>
-		</>
-	)
-}
+            const userId = res['ajs_user_id'].value;
 
-export default Authentication
+            const cookieStr = Object.values(res)
+              .map((c) => `${c.name}=${c.value}`)
+              .join('; ');
+            onCookiesExtracted(cookieStr, userId);
+          } catch (error) {
+            console.log('error getting cookies: ', error);
+          }
+        }}
+      />
+    </>
+  );
+};
+
+export default Authentication;

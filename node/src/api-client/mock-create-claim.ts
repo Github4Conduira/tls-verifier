@@ -29,7 +29,6 @@ export async function mockCreateClaim<Name extends ProviderName>({
 	const { receipt } = await generateProviderReceipt({
 		name,
 		secretParams,
-		params,
 		client,
 		logger,
 	})

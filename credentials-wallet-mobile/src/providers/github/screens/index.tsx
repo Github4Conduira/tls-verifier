@@ -4,10 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Authentication from './Authentication'
 
 export type GithubStackParamList = {
-  Authentication: {
-    returnScreen: RootScreenWithParams
-  }
-};
+    Authentication: {
+        returnScreen: RootScreenWithParams
+    }
+}
 
 const Stack = createNativeStackNavigator<GithubStackParamList>()
 

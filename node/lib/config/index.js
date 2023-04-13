@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RECLAIM_USER_AGENT = exports.MAX_ZK_CHUNKS = exports.PRIVATE_KEY = exports.API_SERVER_PORT = void 0;
+const dotenv_1 = require("dotenv");
+const nodeEnv = process.env.NODE_ENV || 'development';
+(0, dotenv_1.config)({ path: `.env.${nodeEnv}` });
+exports.API_SERVER_PORT = 8001;
+exports.PRIVATE_KEY = process.env.PRIVATE_KEY;
+exports.MAX_ZK_CHUNKS = 40;
+exports.RECLAIM_USER_AGENT = 'reclaim/0.0.1';

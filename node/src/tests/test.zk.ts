@@ -1,4 +1,4 @@
-import { makeZKOperatorFromLocalFiles } from '@questbook/reclaim-zk'
+import { loadZKParamsLocally } from '@questbook/reclaim-zk'
 import { FinaliseSessionRequest_Block as BlockToReveal } from '../proto/api'
 import { AUTH_TAG_BYTE_LENGTH } from '../tls/constants'
 import { NODEJS_TLS_CRYPTO } from '../utils'
@@ -10,9 +10,9 @@ type ServerBlock = BlockToReveal & {
 	ciphertext: Buffer
 }
 
-const OPERATOR = makeZKOperatorFromLocalFiles()
+const ZK_PARAMS = loadZKParamsLocally()
 
-jest.setTimeout(60_000) // 60s
+jest.setTimeout(30_000) // 20s
 
 describe('ZK', () => {
 
@@ -147,7 +147,7 @@ describe('ZK', () => {
 
 			const proofs = await prepareZkProofs({
 				blocks,
-				operator: OPERATOR,
+				params: ZK_PARAMS,
 				redact: () => redactions
 			})
 
@@ -163,7 +163,7 @@ describe('ZK', () => {
 					{
 						ciphertext: block.ciphertext,
 						zkReveal: block.zkReveal!,
-						operator: OPERATOR,
+						params: ZK_PARAMS,
 					},
 				)
 

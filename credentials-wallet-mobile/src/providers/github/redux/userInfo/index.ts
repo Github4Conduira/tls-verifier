@@ -3,11 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface GithubUserState {
   accessToken: string | null
   username: string | null
+
 }
 
 const initialState: GithubUserState = {
 	accessToken: null,
-	username: null,
+	username: null
 }
 
 const userInfoSlice = createSlice({
@@ -20,6 +21,7 @@ const userInfoSlice = createSlice({
 		}),
 	},
 })
+
 
 export const { setUserInfo } = userInfoSlice.actions
 export default userInfoSlice.reducer

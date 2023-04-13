@@ -7,15 +7,17 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 import GithubStackNavigator, { GithubStackParamList } from './github/screens'
 import GoogleStackNavigator, { GoogleStackParamList } from './google/screens'
 
+
 /**
  * @description This is the type of the param list for the providers navigator.
  * @instructions Add a new key to this type for each provider you add.
  */
 export type ProvidersStackParamList = {
-  google: GoogleStackParamList
-  yc: YcStackParamList
-  github: GithubStackParamList
-};
+    google: GoogleStackParamList
+    yc: YcStackParamList
+    github: GithubStackParamList
+}
+
 
 export type RootScreenWithParams = {
   [K in keyof RootStackParamList]: [K, RootStackParamList[K]];
@@ -24,13 +26,12 @@ export type ProvidersNavigatorScreenParamList = {
   [K in keyof ProvidersStackParamList]: NavigatorScreenParams<ProvidersStackParamList[K]>;
 };
 
-export type ProvidersStackScreenProps<
-  P extends ProviderType,
-  S extends keyof ProvidersStackParamList[P]
-> = CompositeScreenProps<
-  NativeStackScreenProps<ProvidersStackParamList[P], S>,
-  NativeStackScreenProps<RootStackParamList>
->;
+export type ProvidersStackScreenProps<P extends ProviderType, S extends keyof ProvidersStackParamList[P]> =
+    CompositeScreenProps<
+        NativeStackScreenProps<ProvidersStackParamList[P], S>,
+        NativeStackScreenProps<RootStackParamList>
+    >;
+
 
 const Stack = createNativeStackNavigator<ProvidersNavigatorScreenParamList>()
 
@@ -40,7 +41,7 @@ const Stack = createNativeStackNavigator<ProvidersNavigatorScreenParamList>()
  */
 const ProvidersStackNavigator: React.FC = () => {
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator >
 			<Stack.Screen
 				name='google'
 				component={GoogleStackNavigator} />

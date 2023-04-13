@@ -1,4 +1,4 @@
-import { generateAuthToken } from '@reclaimprotocol/crypto-sdk'
+import { generateAuthToken } from '@questbookapp/reclaim-crypto-sdk'
 import { createChannel, createClient, Metadata } from 'nice-grpc-web'
 import {ReclaimBackendDefinition} from '../proto'
 import { BACKEND_URL } from '../config'

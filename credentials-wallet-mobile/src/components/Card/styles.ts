@@ -1,5 +1,5 @@
-import { padding } from '@app/lib/styles/common'
-import styled from 'styled-components/native'
+import { padding } from '@app/lib/styles/common';
+import styled from 'styled-components/native';
 
 export const Container = styled.View`
   ${padding[0]}
@@ -10,4 +10,4 @@ export const Container = styled.View`
   border-radius: 12px;
 
   margin-bottom: 12px;
-`
+`;

@@ -6,7 +6,7 @@ import { Claim, ClaimProof, EncryptedClaimProof } from '../types'
 import { BufferJSON } from './buffer-json'
 import { isRedactionCongruent } from './redactions'
 import { createSignDataForClaim } from './sign-data'
-import { signatures } from "./signatures";
+import {signatures} from "./signatures";
 
 const AUTH_TAG_LENGTH = 16
 
@@ -80,9 +80,9 @@ export function verifyEncryptedClaims(
 	const claimsMissing = new Set<number>(claims.map(c => c.id))
 	// go through all encrypted proofs and decrypt them
 	// check if the decrypted proof matches the claim
-	for (const { id, enc } of encryptedProofs) {
+	for(const { id, enc } of encryptedProofs) {
 		const claim = claims.find(c => c.id === id)
-		if (!claim) {
+		if(!claim) {
 			throw new Error('Claim not found')
 		}
 
@@ -92,66 +92,56 @@ export function verifyEncryptedClaims(
 		const proof: ClaimProof = JSON.parse(decryped.toString(), BufferJSON.reviver)
 		// 3. check the claim parameters contained original link
 		// match the ones decrypted
-		if (!isRedactionCongruent(claim.redactedParameters, proof.parameters)) {
+		if(!isRedactionCongruent(claim.redactedParameters, proof.parameters)) {
 			throw new Error(`Claim parameters do not match for "${id}", redacted="${claim.redactedParameters}", decrypted="${proof.parameters}"`)
 		}
 
-		verifyWitnessSignature(claim, proof)
+		// 4. go through all signatures
+		// and check that they are valid
+		const dataStr = createSignDataForClaim({
+			provider: claim.provider,
+			parameters: proof.parameters,
+			owner: signatures.getAddress(claim.ownerPublicKey),
+			timestampS: claim.timestampS,
+			claimId: claim.id,
+			context: ''
+		})
 
+		// set of witnesses whose signatures we've not seen
+		const witnesses = new Set(claim.witnessAddresses)
+		const signatureAddresses = new Set()
+		for(const signature of proof.signatures) {
+			const signer = utils.verifyMessage(dataStr, signature).toLowerCase()
+			signatureAddresses.add(signer)
+		}
+
+		// check that each witness signed the claim
+		witnesses.forEach(witness => {
+			if (signatureAddresses.has(witness)){
+				signatureAddresses.delete(witness)
+			} else {
+				throw new Error(`Could not find signature for witness: ${witness}`)
+			}
+		})
+
+		// check for extra signatures
+		if (signatureAddresses.size > 0){
+			throw new Error(`Claim signed by more witnesses than expected`)
+		}
+
+		
 		claimsMissing.delete(id)
 		revealedClaims[id] = proof
 	}
 
 	// 7. if there are any claims left, that did not have a proof
 	// throw an error, because we expected all claims to be proven
-	if (claimsMissing.size) {
+	if(claimsMissing.size) {
 		const missing = claims.map(c => c.id).join(', ')
 		throw new Error(`Not all claims were proven: ${missing}`)
 	}
 
 	return revealedClaims
-}
-
-/**
- * Step 4 of verifyEncryptedClaims()
- * Call to verify if the claim has witness signature
- * @param claim the claim to check for witness signature
- * @param proof decrypted proof
- */
-
-export function verifyWitnessSignature(claim: Claim, proof: ClaimProof) {
-	// 4. go through all signatures
-	// and check that they are valid
-	const dataStr = createSignDataForClaim({
-		provider: claim.provider,
-		parameters: proof.parameters,
-		owner: signatures.getAddress(claim.ownerPublicKey),
-		timestampS: claim.timestampS,
-		claimId: claim.id,
-		context: ''
-	})
-
-	// set of witnesses whose signatures we've not seen
-	const witnesses = new Set(claim.witnessAddresses)
-	const signatureAddresses = new Set()
-	for (const signature of proof.signatures) {
-		const signer = utils.verifyMessage(dataStr, signature).toLowerCase()
-		signatureAddresses.add(signer)
-	}
-
-	// check that each witness signed the claim
-	witnesses.forEach(witness => {
-		if (signatureAddresses.has(witness)) {
-			signatureAddresses.delete(witness)
-		} else {
-			throw new Error(`Could not find signature for witness: ${witness}`)
-		}
-	})
-
-	// check for extra signatures
-	if (signatureAddresses.size > 0) {
-		throw new Error(`Claim signed by more witnesses than expected`)
-	}
 }
 
 function getKeyAndSalt(publicKey: Uint8Array, privateKey: Uint8Array) {

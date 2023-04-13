@@ -1,4 +1,4 @@
-import { hashClaimInfo } from '@reclaimprotocol/crypto-sdk'
+import { hashClaimInfo } from '@questbookapp/reclaim-crypto-sdk'
 import { ProviderClaimData } from '../proto/api'
 import providers from '../providers'
 import newSession from '../sessions/new-session'
@@ -63,9 +63,7 @@ function validateProviderAndJsonParams(provider, jsonParams) {
 		throw new ServerError(Status.INVALID_ARGUMENT, `Invalid params: ${jsonParams}`)
 	}
 
-	// @ts-ignore
-	const hostPort = prov.hostPort instanceof Function ? prov.hostPort(params) : prov.hostPort
-	const splitResult = hostPort.split(':')
+	const splitResult = prov.hostPorts[0].split(':')
 
 	return {
 		host: splitResult[0],

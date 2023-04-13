@@ -3,7 +3,7 @@ import {
 	createSignDataForCommunicationKey,
 	generateAuthToken, hashClaimInfo,
 	signatures
-} from '@reclaimprotocol/crypto-sdk'
+} from '@questbookapp/reclaim-crypto-sdk'
 import { randomBytes, randomInt } from 'crypto'
 import { utils, Wallet } from 'ethers'
 import { arrayify } from 'ethers/lib/utils'

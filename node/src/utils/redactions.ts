@@ -1,4 +1,4 @@
-import { isFullyRedacted, REDACTION_CHAR_CODE } from '@reclaimprotocol/crypto-sdk'
+import { isFullyRedacted, REDACTION_CHAR_CODE } from '@questbookapp/reclaim-crypto-sdk'
 import { BufferSlice } from '../types/sessions'
 
 /**

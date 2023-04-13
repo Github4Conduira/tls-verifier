@@ -1,5 +1,5 @@
-import { generateProof, toUint8Array, toUintArray, verifyProof, ZKOperator } from '@questbook/reclaim-zk'
-import { isFullyRedacted, REDACTION_CHAR_CODE } from '@reclaimprotocol/crypto-sdk'
+import { generateProof, toUint8Array, toUintArray, verifyProof, ZKParams } from '@questbook/reclaim-zk'
+import { isFullyRedacted, REDACTION_CHAR_CODE } from '@questbookapp/reclaim-crypto-sdk'
 import { Logger } from 'pino'
 import { MAX_ZK_CHUNKS } from '../config'
 import { FinaliseSessionRequest_Block as BlockReveal, FinaliseSessionRequest_BlockRevealZk } from '../proto/api'
@@ -29,7 +29,7 @@ type PrepareZKProofsOpts = {
 	/** blocks to prepare ZK proof for */
 	blocks: BlockWithPlaintext[]
 	/** params for ZK proof gen */
-	operator: ZKOperator
+	params: ZKParams
 	/** redact selected portions of the plaintext */
 	redact: (plaintext: Buffer) => BufferSlice[]
 	logger?: Logger
@@ -39,7 +39,7 @@ type ZKVerifyOpts = {
 	ciphertext: Uint8Array
 	// eslint-disable-next-line camelcase
 	zkReveal: FinaliseSessionRequest_BlockRevealZk
-	operator: ZKOperator
+	params: ZKParams
 	logger?: Logger
 }
 
@@ -49,7 +49,7 @@ type ZKVerifyOpts = {
 export async function prepareZkProofs(
 	{
 		blocks,
-		operator,
+		params,
 		redact,
 		logger
 	}: PrepareZKProofsOpts
@@ -113,7 +113,7 @@ export async function prepareZkProofs(
 								redactedPlaintext: chunk,
 								ciphertext: ciphertextChunk
 							},
-							operator,
+							params,
 						)
 
 						logger?.debug(
@@ -149,9 +149,9 @@ export async function verifyZKBlock(
 	{
 		ciphertext,
 		zkReveal,
-		operator,
+		params,
 		logger
-	}: ZKVerifyOpts,
+	}: ZKVerifyOpts
 ) {
 	if(!zkReveal) {
 		throw new Error('No ZK reveal')
@@ -196,7 +196,7 @@ export async function verifyZKBlock(
 					redactedPlaintext,
 					ciphertext: ciphertextChunk,
 				},
-				operator
+				params.zkey
 			)
 
 			logger?.debug(

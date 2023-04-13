@@ -25,25 +25,6 @@ export type VerificationKey = {
 	json?: any
 }
 
-type ZKProof = any
-
-type ZKProofOutput = {
-	proof: ZKProof,
-	publicSignals: number[]
-}
-
-/**
- * the operator to use for proving and verifying a ZK proof
- * this is generic to allow for different implementations
- */
-export type ZKOperator = {
-	groth16FullProve<T>(input: T): Promise<ZKProofOutput>
-	groth16Verify(
-		publicSignals: number[],
-		proof: ZKProof
-	): Promise<boolean>
-}
-
 export type ZKParams = {
 	zkey: VerificationKey
 	circuitWasm: ZKInput

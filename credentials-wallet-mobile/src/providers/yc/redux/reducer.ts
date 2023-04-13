@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux'
-import userInfoReducer from './userInfo'
+import { combineReducers } from 'redux';
+import userInfoReducer from './userInfo';
 
 const ycReducer = combineReducers({
-	userInfo: userInfoReducer,
-})
+  userInfo: userInfoReducer,
+});
 
-export default ycReducer
+export default ycReducer;

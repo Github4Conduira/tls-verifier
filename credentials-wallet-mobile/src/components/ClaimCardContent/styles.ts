@@ -1,5 +1,5 @@
-import { padding } from '@app/lib/styles/common'
-import styled from 'styled-components/native'
+import styled from 'styled-components/native';
+import { padding } from '@app/lib/styles/common';
 
 export const BarContainer = styled.View`
   background-color: ${(props) => props.theme.palette.common.lightGray};
@@ -10,8 +10,8 @@ export const BarContainer = styled.View`
   border-bottom-right-radius: 12px;
   border-bottom-left-radius: 12px;
   ${padding[0]}
-`
+`;
 
 export const ContentContainer = styled.View<{ opacity?: number }>`
   opacity: ${(props) => props.opacity ?? 1};
-`
+`;

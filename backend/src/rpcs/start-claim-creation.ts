@@ -1,6 +1,6 @@
 import { getContract } from '@questbook/reclaim-node'
 import { ClaimCreationRequestedEvent } from '@questbook/reclaim-node/lib/types/contracts/Reclaim'
-import { createSignDataForClaim, signatures } from '@reclaimprotocol/crypto-sdk'
+import { createSignDataForClaim, signatures } from '@questbookapp/reclaim-crypto-sdk'
 import { utils } from 'ethers'
 import { ServerError, Status } from 'nice-grpc'
 import { DEFAULT_MINT_CHAIN_ID } from '../config'

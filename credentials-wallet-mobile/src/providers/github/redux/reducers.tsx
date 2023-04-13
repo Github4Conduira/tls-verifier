@@ -4,7 +4,7 @@ import userInfoReducer from './userInfo'
 
 const githubReducer = combineReducers({
 	userInfo: userInfoReducer,
-	repoInfo: repoInfoReducer,
+	repoInfo: repoInfoReducer
 })
 
 export default githubReducer

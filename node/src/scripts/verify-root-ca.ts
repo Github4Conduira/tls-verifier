@@ -1,7 +1,6 @@
 import { Socket } from 'net'
 import { makeTLSClient } from '../tls'
 import { verifyCertificateChain } from '../tls/parse-certificate'
-import { DEFAULT_PORT } from '../types'
 import logger from '../utils/logger'
 
 const hostPort = process.argv[2]
@@ -45,7 +44,7 @@ export async function main() {
 
 	logger.info(`connecting to ${hostPort}`)
 
-	socket.connect({ host, port: +(port || DEFAULT_PORT) })
+	socket.connect({ host, port: +(port || 443) })
 }
 
 main()

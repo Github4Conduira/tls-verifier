@@ -40,14 +40,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CredentialsWallet/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = CredentialsWallet/main.m; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-CredentialsWallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CredentialsWallet.debug.xcconfig"; path = "Target Support Files/Pods-CredentialsWallet/Pods-CredentialsWallet.debug.xcconfig"; sourceTree = "<group>"; };
-		473A7B0329B29016005CEBE0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		473A7B0329B29016005CEBE0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		473A7B0529B2901E005CEBE0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		47C13D7D29DF3B95008AC4EB /* CredentialsWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CredentialsWallet.entitlements; path = CredentialsWallet/CredentialsWallet.entitlements; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-CredentialsWallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CredentialsWallet.release.xcconfig"; path = "Target Support Files/Pods-CredentialsWallet/Pods-CredentialsWallet.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-CredentialsWallet-CredentialsWalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CredentialsWallet-CredentialsWalletTests.debug.xcconfig"; path = "Target Support Files/Pods-CredentialsWallet-CredentialsWalletTests/Pods-CredentialsWallet-CredentialsWalletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = CredentialsWallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-CredentialsWallet-CredentialsWalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CredentialsWallet-CredentialsWalletTests.release.xcconfig"; path = "Target Support Files/Pods-CredentialsWallet-CredentialsWalletTests/Pods-CredentialsWallet-CredentialsWalletTests.release.xcconfig"; sourceTree = "<group>"; };
-		A52B830720D647E1A562DF30 /* Manrope.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Manrope.ttf; path = ../src/assets/fonts/Manrope.ttf; sourceTree = "<group>"; };
+		A52B830720D647E1A562DF30 /* Manrope.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Manrope.ttf; path = ../src/assets/fonts/Manrope.ttf; sourceTree = "<group>"; };
 		EB3DFA70C2B1ABF0BE7821E8 /* Pods_CredentialsWallet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CredentialsWallet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -92,7 +91,6 @@
 		13B07FAE1A68108700A75B9A /* CredentialsWallet */ = {
 			isa = PBXGroup;
 			children = (
-				47C13D7D29DF3B95008AC4EB /* CredentialsWallet.entitlements */,
 				473A7B0529B2901E005CEBE0 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -110,6 +108,7 @@
 				A52B830720D647E1A562DF30 /* Manrope.ttf */,
 			);
 			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -518,20 +517,15 @@
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-CredentialsWallet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = CredentialsWallet/CredentialsWallet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 69T6V5YN8P;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = CredentialsWallet/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Reclaim Wallet";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -550,19 +544,14 @@
 			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-CredentialsWallet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = CredentialsWallet/CredentialsWallet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 69T6V5YN8P;
 				INFOPLIST_FILE = CredentialsWallet/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Reclaim Wallet";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

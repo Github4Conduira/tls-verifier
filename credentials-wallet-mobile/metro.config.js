@@ -42,10 +42,6 @@ module.exports = {
 			os: path.resolve(__dirname, 'node_modules/react-native-os'),
 			path: path.resolve(__dirname, 'node_modules/path-browserify'),
 			constants: path.resolve(__dirname, 'node_modules/constants-browserify'),
-			// eslint-disable-next-line camelcase
-			perf_hooks: MOCK_MODULE,
-			// eslint-disable-next-line camelcase
-			child_process: MOCK_MODULE,
 		},
 	},
 	// options for reading data outside root react-native folder

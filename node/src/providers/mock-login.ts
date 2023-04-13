@@ -19,7 +19,7 @@ type MockLoginSecretParams = {
 const HOSTPORT = 'localhost:8881'
 
 const mockLogin: Provider<MockLoginParams, MockLoginSecretParams> = {
-	hostPort: HOSTPORT,
+	hostPorts: [HOSTPORT],
 	additionalClientOptions: {
 		verifyServerCertificate: false
 	},

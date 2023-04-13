@@ -3,6 +3,7 @@ import googleReducer from '@app/providers/google/redux/reducer'
 import ycReducer from '@app/providers/yc/redux/reducer'
 import { combineReducers } from 'redux'
 
+
 /**
  * providersReducer
  * @description This is the root reducer for the providers folder
@@ -11,7 +12,8 @@ import { combineReducers } from 'redux'
 const providersReducer = combineReducers({
 	google: googleReducer,
 	yc: ycReducer,
-	github: githubReducer,
+	github: githubReducer
 })
 
 export default providersReducer
+

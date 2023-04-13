@@ -1,4 +1,4 @@
-import { makeZKOperatorFromJson, ZKOperator } from '@questbook/reclaim-zk'
+import { loadZKParamsLocally, ZKParams } from '@questbook/reclaim-zk'
 import { Logger } from 'pino'
 import { FinaliseSessionRequest_Block, InitialiseSessionRequest, PullFromSessionResponse, PushToSessionRequest, ReclaimWitnessClient, TlsCipherSuiteType } from '../proto/api'
 import { makeTLSClient } from '../tls'
@@ -18,7 +18,7 @@ export type APITLSClientOptions = {
 	request?: InitialiseSessionRequest
 	logger?: Logger
 	additionalConnectOpts?: TLSConnectionOptions
-	zkOperator?: ZKOperator
+	zkParams?: ZKParams
 }
 
 // eslint-disable-next-line camelcase
@@ -39,7 +39,7 @@ export const makeAPITLSClient = ({
 	request,
 	logger: _logger,
 	additionalConnectOpts,
-	zkOperator
+	zkParams
 }: APITLSClientOptions) => {
 	let sessionId: string | undefined
 	let abort: AbortController | undefined
@@ -279,7 +279,7 @@ export const makeAPITLSClient = ({
 				const zkBlocks = await prepareZkProofs(
 					{
 						blocks: allServerBlocks,
-						operator: zkOperator || makeZKOperatorFromJson(logger),
+						params: zkParams || loadZKParamsLocally(),
 						redact: redactResponse,
 						logger,
 					}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@app/screens';
@@ -10,14 +10,11 @@ import PossibleClaimCard from '@app/components/PossibleClaimCard';
 import { useReduxDispatch, useReduxSelector } from '@app/redux/config';
 import { addClaim } from '@app/redux/links/actions';
 import { getTempLink } from '@app/redux/links/selectors';
-import { WebViewZKOperatorContext } from '@app/lib/utils/webviewZkOperator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PossibleClaims'>;
 
 const PossibleClaims: React.FC<Props> = ({ navigation, route }) => {
   const { provider } = route.params;
-
-  const { operator: zkOperator } = useContext(WebViewZKOperatorContext)
   const dispatch = useReduxDispatch();
   const link = useReduxSelector(getTempLink);
 
@@ -43,7 +40,6 @@ const PossibleClaims: React.FC<Props> = ({ navigation, route }) => {
                   claimName: possibleClaim.providerName,
                   link,
                   isTemp: true,
-                  zkOperator,
                 })
               );
               navigation.navigate('CreateLink');

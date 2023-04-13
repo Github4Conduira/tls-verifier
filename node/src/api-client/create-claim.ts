@@ -1,6 +1,5 @@
 import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
-import { ZKOperator } from '@questbook/reclaim-zk'
-import { hashClaimInfo } from '@reclaimprotocol/crypto-sdk'
+import { hashClaimInfo } from '@questbookapp/reclaim-crypto-sdk'
 import { ethers } from 'ethers'
 import { createChannel, createClient } from 'nice-grpc-web'
 import { Logger } from 'pino'
@@ -45,7 +44,6 @@ export interface CreateClaimOptions<N extends ProviderName> {
 	makeGrpcClient?: (url: string) => ReturnType<typeof createClient<ReclaimWitnessDefinition>>
 
 	logger?: Logger
-	zkOperator?: ZKOperator
 }
 
 type SmartContractCreateOptions = {
@@ -75,7 +73,6 @@ export async function createClaim<Name extends ProviderName>({
 	additionalConnectOpts,
 	makeGrpcClient,
 	logger,
-	zkOperator,
 }: CreateClaimOptions<Name>) {
 	logger = logger || LOGGER
 
@@ -181,7 +178,6 @@ export async function createClaim<Name extends ProviderName>({
 		} = await generateProviderReceipt({
 			name,
 			secretParams,
-			params,
 			requestData: {
 				chainId,
 				claimId: +claimId,
@@ -190,7 +186,6 @@ export async function createClaim<Name extends ProviderName>({
 			client: grpcClient,
 			additionalConnectOpts,
 			logger,
-			zkOperator,
 		})
 
 		return {

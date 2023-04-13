@@ -1,4 +1,4 @@
-import { signatures } from '@reclaimprotocol/crypto-sdk'
+import { signatures } from '@questbookapp/reclaim-crypto-sdk'
 import { ServiceSignatureType } from '../proto/api'
 
 export const SIGNATURES = {

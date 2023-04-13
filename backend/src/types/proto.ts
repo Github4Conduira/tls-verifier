@@ -1,4 +1,4 @@
-import { AuthToken } from '@reclaimprotocol/crypto-sdk'
+import { AuthToken } from '@questbookapp/reclaim-crypto-sdk'
 import type { Logger } from 'pino'
 import { ReclaimBackendServiceImplementation } from '../api'
 import { App as FirebaseApp } from '../firebase/index'

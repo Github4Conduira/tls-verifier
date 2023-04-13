@@ -1,4 +1,4 @@
-import { makeZKOperatorFromLocalFiles } from '@questbook/reclaim-zk'
+import { loadZKParamsLocally } from '@questbook/reclaim-zk'
 import { Logger } from 'pino'
 import { PRIVATE_KEY } from '../config'
 import { TlsCipherSuiteType, TLSReceipt, TranscriptMessage, TranscriptMessageSenderType } from '../proto/api'
@@ -9,7 +9,7 @@ import { TLSSession } from '../types/sessions'
 import { unixTimestampSeconds } from '../utils'
 import { verifyZKBlock } from '../utils/zk'
 
-const operator = makeZKOperatorFromLocalFiles()
+const params = loadZKParamsLocally()
 
 export async function generateSessionReceipt(
 	session: TLSSession,
@@ -47,7 +47,7 @@ export async function generateSessionReceipt(
 					{
 						ciphertext: packet.content,
 						zkReveal,
-						operator,
+						params,
 						logger,
 					}
 				)

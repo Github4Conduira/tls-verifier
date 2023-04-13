@@ -6,18 +6,16 @@ import { getRepoInfo } from './repoInfo/selectors'
 
 export const getGithub = (state: RootState) => getProviders(state).github
 
-export const getGithubClaimParams: PossibleClaimData<'github-contributor'>['getParams'] = (
-	state: RootState
-) => {
+
+export const getGithubClaimParams: PossibleClaimData<'github-contributor'>['getParams'] = (state: RootState) => {
 	const repo = getRepoInfo(state).repo ?? ''
 	return {
 		repo,
 	}
 }
 
-export const getGithubSecretParams: PossibleClaimData<'github-contributor'>['getSecretParams'] = (
-	state: RootState
-) => {
+
+export const getGithubSecretParams: PossibleClaimData<'github-contributor'>['getSecretParams'] = (state: RootState) => {
 	const token = getUserInfo(state).accessToken ?? ''
 	const username = getUserInfo(state).username ?? ''
 	const repo = getRepoInfo(state).repo ?? ''

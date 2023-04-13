@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux'
-import userInfoReducer from './userInfo'
+import { combineReducers } from 'redux';
+import userInfoReducer from './userInfo';
 
 /**
  * googleReducer
@@ -7,7 +7,7 @@ import userInfoReducer from './userInfo'
  * @instructions Add your reducers from the google redux folder to the combineReducers function
  */
 const googleReducer = combineReducers({
-	userInfo: userInfoReducer,
-})
+  userInfo: userInfoReducer,
+});
 
-export default googleReducer
+export default googleReducer;

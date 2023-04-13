@@ -17,7 +17,7 @@ describe('API Tests', () => {
 	const server = makeGrpcServer(grpcServerPort)
 	const tlsServer = createMockTLSServer(tlsServerPort)
 
-	providers['mock-login'].hostPort = `localhost:${tlsServerPort}`
+	providers['mock-login'].hostPorts = [`localhost:${tlsServerPort}`]
 
 	beforeAll(async() => {
 		await server

@@ -1,4 +1,4 @@
 export * from './zk'
-export * from './operator'
+export * from './params'
 export * from './types'
 export * from './utils'

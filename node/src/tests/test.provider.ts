@@ -1,4 +1,4 @@
-import { createSignDataForClaim, hashClaimInfo } from '@reclaimprotocol/crypto-sdk'
+import { createSignDataForClaim, hashClaimInfo } from '@questbookapp/reclaim-crypto-sdk'
 import { utils } from 'ethers'
 import { createChannel, createClient } from 'nice-grpc'
 import { createClaim, generateProviderReceipt } from '../api-client'
@@ -56,7 +56,6 @@ describe('Provider Tests', () => {
 		} = await generateProviderReceipt({
 			name: MOCK_APP_NAME,
 			secretParams: { token: 'adhiraj' },
-			params: JSON.parse(MOCK_PARAMS),
 			requestData: {
 				chainId: 1,
 				claimId: 1,
@@ -94,7 +93,6 @@ describe('Provider Tests', () => {
 			generateProviderReceipt({
 				name: MOCK_APP_NAME,
 				secretParams: { token: 'wrong-token' },
-				params: JSON.parse(MOCK_PARAMS),
 				requestData: {
 					chainId: 1,
 					claimId: 1,

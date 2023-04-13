@@ -1,6 +1,9 @@
 import { RECLAIM_USER_AGENT } from '../../config'
-import { DEFAULT_PORT, Provider } from '../../types'
-import { getCompleteHttpResponseFromTranscript, getHttpRequestHeadersFromTranscript, } from '../../utils/http-parser'
+import { Provider } from '../../types'
+import {
+	getCompleteHttpResponseFromTranscript,
+	getHttpRequestHeadersFromTranscript,
+} from '../../utils/http-parser'
 import { isGithubError } from './utils'
 
 type GithubLoginParams = {
@@ -14,7 +17,8 @@ type GithubRepoContributorsListSecretParams = {
 }
 
 const HOST = 'api.github.com'
-const HOSTPORT = `${HOST}:${DEFAULT_PORT}`
+const PORT = 443
+const HOSTPORT = `${HOST}:${PORT}`
 
 // repos/{owner}/{repo}/commits
 // what API to call
@@ -25,7 +29,7 @@ const githubContributor: Provider<
 	GithubLoginParams,
 	GithubRepoContributorsListSecretParams
 > = {
-	hostPort: HOSTPORT,
+	hostPorts: [HOSTPORT],
 	areValidParams(params): params is GithubLoginParams {
 		const { repo } = params
 		return (

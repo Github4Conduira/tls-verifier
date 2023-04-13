@@ -1,9 +1,8 @@
-import { ZKOperator } from '@questbook/reclaim-zk'
 import { Logger } from 'pino'
 import { ReclaimWitnessClient } from '../proto/api'
 import { InitialiseSessionRequest_ProviderClaimRequest as ProviderClaimRequest } from '../proto/api'
-import providers, { ProviderName, ProviderParams, ProviderSecretParams } from '../providers'
-import { DEFAULT_PORT, TLSConnectionOptions } from '../types'
+import providers, { ProviderName, ProviderSecretParams } from '../providers'
+import { TLSConnectionOptions } from '../types'
 import { makeHttpResponseParser } from '../utils/http-parser'
 import MAIN_LOGGER from '../utils/logger'
 import { makeAPITLSClient } from './make-api-tls-client'
@@ -17,31 +16,23 @@ export interface GenerateProviderReceiptOptions<N extends ProviderName> {
 	 * outside this client
 	 */
 	secretParams: ProviderSecretParams<N>
-	params: ProviderParams<N>
 	requestData?: ProviderClaimRequest
 	client: ReclaimWitnessClient
 	additionalConnectOpts?: TLSConnectionOptions
 	logger?: Logger
-	zkOperator?: ZKOperator
 }
 
 export async function generateProviderReceipt<Name extends ProviderName>({
 	name,
 	secretParams,
-	params,
 	client,
 	requestData,
 	additionalConnectOpts,
 	logger,
-	zkOperator,
 }: GenerateProviderReceiptOptions<Name>) {
 	logger = logger || MAIN_LOGGER
 	const provider = providers[name]
-
-	// @ts-ignore
-	const hostPort = typeof provider.hostPort === 'function' ? provider.hostPort(params) : provider.hostPort
-
-	const [host, port] = hostPort.split(':')
+	const [host, port] = provider.hostPorts[0].split(':')
 
 	additionalConnectOpts = additionalConnectOpts || { }
 	if(provider.additionalClientOptions?.rootCAs) {
@@ -53,7 +44,7 @@ export async function generateProviderReceipt<Name extends ProviderName>({
 
 	const apiClient = makeAPITLSClient({
 		host,
-		port: port ? +port : DEFAULT_PORT,
+		port: port ? +port : 443,
 		request: {
 			providerClaimRequest: requestData,
 			receiptGenerationRequest: undefined
@@ -61,12 +52,11 @@ export async function generateProviderReceipt<Name extends ProviderName>({
 		client,
 		logger,
 		additionalConnectOpts,
-		zkOperator,
 		redactResponse:
 			provider.getResponseRedactions
 				? res => {
 					// @ts-ignore
-					return provider.getResponseRedactions!(res, params)
+					return provider.getResponseRedactions!(res, secretParams)
 				}
 				: undefined
 	})
@@ -85,8 +75,7 @@ export async function generateProviderReceipt<Name extends ProviderName>({
 
 	const request = provider.createRequest(
 		// @ts-ignore
-		secretParams,
-		params
+		secretParams
 	)
 
 	logger.debug(

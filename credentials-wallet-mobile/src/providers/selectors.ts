@@ -1,3 +1,3 @@
-import { RootState } from '@app/redux/config'
+import { RootState } from '@app/redux/config';
 
-export const getProviders = (state: RootState) => state.providers
+export const getProviders = (state: RootState) => state.providers;

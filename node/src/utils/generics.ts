@@ -1,4 +1,4 @@
-import { createSignDataForClaim } from '@reclaimprotocol/crypto-sdk'
+import { createSignDataForClaim } from '@questbookapp/reclaim-crypto-sdk'
 import { PRIVATE_KEY } from '../config'
 import { ProviderClaimData, TranscriptMessage, TranscriptMessageSenderType } from '../proto/api'
 import { SelectedServiceSignature } from '../signatures'

@@ -1,10 +1,10 @@
 import { randomBytes } from "crypto";
-import { REDACTION_CHAR_CODE } from '@reclaimprotocol/crypto-sdk/build/utils/redactions'
+import { REDACTION_CHAR_CODE } from '@questbookapp/reclaim-crypto-sdk/build/utils/redactions'
 import { PrivateInput } from '../types'
-import { generateProof, makeZKOperatorFromLocalFiles, verifyProof } from '../index'
+import { generateProof, loadZKParamsLocally, verifyProof } from '../index'
 import { encryptData } from "../utils";
 
-const OPERATOR = makeZKOperatorFromLocalFiles()
+const ZKPARAMS = loadZKParamsLocally()
 
 const ENC_LENGTH = 128
 
@@ -28,10 +28,10 @@ describe('Library Tests', () => {
 			redactedPlaintext: plaintext,
 		}
 
-		const proof = await generateProof(privInputs, pubInputs, OPERATOR)
+		const proof = await generateProof(privInputs, pubInputs, ZKPARAMS)
 		// client will send proof to witness
 		// witness would verify proof
-		await verifyProof(proof, pubInputs, OPERATOR)
+		await verifyProof(proof, pubInputs, ZKPARAMS.zkey)
 	})
 
 	it('should verify redacted data', async() => {
@@ -57,10 +57,10 @@ describe('Library Tests', () => {
 			]),
 		}
 
-		const proof = await generateProof(privInputs, pubInputs, OPERATOR)
+		const proof = await generateProof(privInputs, pubInputs, ZKPARAMS)
 		// client will send proof to witness
 		// witness would verify proof
-		await verifyProof(proof, pubInputs, OPERATOR)
+		await verifyProof(proof, pubInputs, ZKPARAMS.zkey)
 	})
 
 	it('should fail to verify incorrect data', async() => {
@@ -80,9 +80,9 @@ describe('Library Tests', () => {
 			redactedPlaintext: randomBytes(ENC_LENGTH),
 		}
 
-		const proof = await generateProof(privInputs, pubInputs, OPERATOR)
+		const proof = await generateProof(privInputs, pubInputs, ZKPARAMS)
 		await expect(
-			verifyProof(proof, pubInputs, OPERATOR)
+			verifyProof(proof, pubInputs, ZKPARAMS.zkey)
 		).rejects.toHaveProperty('message', 'redacted ciphertext (0) not congruent')
 	})
 })

@@ -13,4 +13,3 @@ snarkjs zkey verify resources/circuit.r1cs pot/pot18_final.ptau resources/circui
 rm -rf resources/circuit_0000.zkey
 rm -rf resources/circuit_0001.zkey
 rm -rf resources/circuit_0002.zkey
-node scripts/generate-json.js

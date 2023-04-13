@@ -2,15 +2,22 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '.env.sample' })
 
 import { createChannel, createClient } from 'nice-grpc'
-import { API_SERVER_PORT, DEFAULT_PORT, makeAPITLSClient, makeGrpcServer, proto } from '../..'
+import { API_SERVER_PORT, makeAPITLSClient, makeGrpcServer, proto } from '../..'
+import { HTTPProviderParams } from '../http/http-provider'
 import providers from '..'
 
 // User id to claim
 const USER_ID = 182853
 
 // The authentication cookie
-const COOKIE_STR = '<your cookie string here>'
+const COOKIE_STR = '<value of your cookie copied from postman header>'
 
+
+const HOST = 'bookface.ycombinator.com'
+const PORT = 443
+const HOSTPORT = `${HOST}:${PORT}`
+
+const URL = `https://${HOSTPORT}/home`
 
 async function main() {
 	const { client } = await makeGrpcServerAndClient()
@@ -18,23 +25,21 @@ async function main() {
 	console.log('booted server & got client')
 
 	const provider = providers['yc-login']
-	const [host] = (typeof provider.hostPort === 'string' ? provider.hostPort : '').split(':')
+	const [host, port] = HOSTPORT.split(':')
 
 	const tlsClient = makeAPITLSClient({
 		host,
-		port: DEFAULT_PORT,
+		port: +port,
 		request: {
 			providerClaimRequest: undefined,
 			receiptGenerationRequest: {
 				host,
-				port: DEFAULT_PORT,
+				port: +port,
 			}
 		},
 		client,
 		...provider.additionalClientOptions!,
-		// Cancel certificate verification for now
-		 additionalConnectOpts:{ verifyServerCertificate:true }
-		// rootCAs:[cert]
+		additionalConnectOpts:{ verifyServerCertificate:true },
 	})
 
 	// handle data from server
@@ -45,12 +50,22 @@ async function main() {
 
 	console.log('connected to YC')
 
+
+	const params: HTTPProviderParams = {
+		url:URL,
+		method:'GET',
+		responseSelection:{
+			xPath:'//script[@id=\'js-react-on-rails-context\']',
+			jsonPath:'$.currentUser.id'
+		},
+		responseMatch:new RegExp(`^${USER_ID}$`, 'g')
+	}
+
 	const req = provider.createRequest(
 		{
-			cookieStr: COOKIE_STR
-		},
-		{
-			userId:USER_ID
+			cookieStr: COOKIE_STR,
+			url:params.url,
+			method: params.method
 		}
 	)
 
@@ -67,9 +82,7 @@ async function main() {
 	console.log('Retrieved the receipt')
 
 	await provider
-		.assertValidProviderReceipt(receipt!, {
-			userId: USER_ID,
-		})
+		.assertValidProviderReceipt(receipt!, params)
 	console.log(`Validated the receipt for user id: ${USER_ID}`)
 }
 

@@ -1,4 +1,4 @@
-import { signatures, verifyEncryptedClaims } from '@reclaimprotocol/crypto-sdk'
+import { signatures, verifyEncryptedClaims } from '@questbookapp/reclaim-crypto-sdk'
 import { utils } from 'ethers'
 import { ServerError, Status } from 'nice-grpc'
 import { VerificationRequestStatus } from '../api'

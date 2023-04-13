@@ -1,4 +1,4 @@
-import { VerificationRequest } from '@questbook/reclaim-client-sdk'
+import { VerificationRequest } from '@questbook/reclaim-client-sdk';
 
 // eslint-disable-next-line no-restricted-syntax
 export enum NotificationType {
@@ -8,10 +8,10 @@ export enum NotificationType {
 }
 
 export interface Notification {
-  id: string
-  title: string | undefined
-  body: string | undefined
-  type: NotificationType
-  requestor?: string
-  verificationRequest: VerificationRequest
+  id: string;
+  title: string | undefined;
+  body: string | undefined;
+  type: NotificationType;
+  requestor?: string;
+  verificationRequest: VerificationRequest;
 }
